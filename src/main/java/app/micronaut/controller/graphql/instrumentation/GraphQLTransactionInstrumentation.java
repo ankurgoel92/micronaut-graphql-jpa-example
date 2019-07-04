@@ -1,4 +1,5 @@
 package app.micronaut.controller.graphql.instrumentation;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -20,35 +21,37 @@ import io.micronaut.context.annotation.Requires;
 /**
  * Opens and closes the transaction before and after GraphQL query execution.
  */
-@Singleton @Requires(beans = PlatformTransactionManager.class)
+@Singleton
+@Requires(beans = PlatformTransactionManager.class)
 public class GraphQLTransactionInstrumentation extends SimpleInstrumentation {
 
-        public static final Logger logger = LoggerFactory.getLogger(GraphQLTransactionInstrumentation.class);
-        public static final String TRANSACTION_NAME = "graphQLTransaction";
+    public static final Logger logger = LoggerFactory.getLogger(GraphQLTransactionInstrumentation.class);
+    public static final String TRANSACTION_NAME = "graphQLTransaction";
 
-        @Inject protected PlatformTransactionManager tm;
+    @Inject
+    protected PlatformTransactionManager tm;
 
-        @Override
-        public InstrumentationContext<ExecutionResult> beginExecuteOperation(InstrumentationExecuteOperationParameters parameters) {
+    @Override
+    public InstrumentationContext<ExecutionResult> beginExecuteOperation(InstrumentationExecuteOperationParameters parameters) {
 
-                logger.debug("Begining transaction for GraphQL execution: {}", Thread.currentThread().getName());
+        logger.debug("Begining transaction for GraphQL execution: {}", Thread.currentThread().getName());
 
-                DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-                def.setName(TRANSACTION_NAME);
-                def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-                def.setReadOnly(!Operation.MUTATION.equals(parameters.getExecutionContext().getOperationDefinition().getOperation()));
-                TransactionStatus status = tm.getTransaction(def);
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setName(TRANSACTION_NAME);
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        def.setReadOnly(!Operation.MUTATION.equals(parameters.getExecutionContext().getOperationDefinition().getOperation()));
+        TransactionStatus status = tm.getTransaction(def);
 
-                return SimpleInstrumentationContext.whenCompleted((t, e) -> {
-                        if (status.isRollbackOnly() || e != null) {
-                                tm.rollback(status);
-                                logger.debug("Rolling back transaction for GraphQL execution: {}", Thread.currentThread().getName());
-                        } else {
-                                tm.commit(status);
-                                logger.debug("Commiting transaction for GraphQL execution: {}", Thread.currentThread().getName());
-                        }
-                });
-                
-        }
+        return SimpleInstrumentationContext.whenCompleted((t, e) -> {
+            if (status.isRollbackOnly() || e != null) {
+                tm.rollback(status);
+                logger.debug("Rolling back transaction for GraphQL execution: {}", Thread.currentThread().getName());
+            } else {
+                tm.commit(status);
+                logger.debug("Commiting transaction for GraphQL execution: {}", Thread.currentThread().getName());
+            }
+        });
+
+    }
 
 }

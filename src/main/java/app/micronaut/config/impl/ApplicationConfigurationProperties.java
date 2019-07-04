@@ -1,9 +1,9 @@
 package app.micronaut.config.impl;
 
-import io.micronaut.context.annotation.ConfigurationProperties;
 import app.micronaut.config.ApplicationConfiguration;
+import io.micronaut.context.annotation.ConfigurationProperties;
 
-@ConfigurationProperties("application") 
+@ConfigurationProperties("application")
 public class ApplicationConfigurationProperties implements ApplicationConfiguration {
 
     protected final Integer DEFAULT_MAX = 10;
@@ -16,7 +16,7 @@ public class ApplicationConfigurationProperties implements ApplicationConfigurat
     }
 
     public void setMax(Integer max) {
-        if(max != null) {
+        if (max != null) {
             this.max = max;
         }
     }

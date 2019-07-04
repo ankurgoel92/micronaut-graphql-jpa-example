@@ -20,17 +20,20 @@ import io.leangen.graphql.annotations.GraphQLQuery;
 @Table(name = "genre")
 public class Genre {
 
-    public Genre() {}
+    public Genre() {
+    }
 
     public Genre(@NotNull String name) {
         this.name = name;
     }
 
-    @Id @GraphQLQuery
+    @Id
+    @GraphQLQuery
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull @GraphQLQuery
+    @NotNull
+    @GraphQLQuery
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 

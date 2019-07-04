@@ -21,26 +21,26 @@ import io.leangen.graphql.util.ClassUtils;
 @Singleton
 public class GraphQLInclusionStrategy implements InclusionStrategy {
 
-        @Override
-        public boolean includeOperation(AnnotatedElement element, AnnotatedType type) {
-                return ClassUtils.hasAnnotation(element, GraphQLQuery.class) || ClassUtils.hasAnnotation(element, GraphQLMutation.class);
-        }
+    @Override
+    public boolean includeOperation(AnnotatedElement element, AnnotatedType type) {
+        return ClassUtils.hasAnnotation(element, GraphQLQuery.class) || ClassUtils.hasAnnotation(element, GraphQLMutation.class);
+    }
 
-        @Override
-        public boolean includeArgument(Parameter parameter, AnnotatedType type) {
-                return ClassUtils.hasAnnotation(parameter, GraphQLArgument.class);
-        }
+    @Override
+    public boolean includeArgument(Parameter parameter, AnnotatedType type) {
+        return ClassUtils.hasAnnotation(parameter, GraphQLArgument.class);
+    }
 
-        @Override
-        public boolean includeInputField(Class<?> declaringClass, AnnotatedElement element, AnnotatedType elementType) {
-                // This is a bit more complex because it defines fields visibility for mutations, and this happens for setters, and if setter is
-                // not present it happens on getters. We define here a one clean contract to include object properties as input fields:
-                // it has to be setter with GraphQLInputField annotation.
+    @Override
+    public boolean includeInputField(Class<?> declaringClass, AnnotatedElement element, AnnotatedType elementType) {
+        // This is a bit more complex because it defines fields visibility for mutations, and this happens for setters, and if setter is
+        // not present it happens on getters. We define here a one clean contract to include object properties as input fields:
+        // it has to be setter with GraphQLInputField annotation.
 
-                if (element instanceof Method && ((Method) element).getName().startsWith("set"))
-                        return ClassUtils.hasAnnotation(element, GraphQLInputField.class);
+        if (element instanceof Method && ((Method) element).getName().startsWith("set"))
+            return ClassUtils.hasAnnotation(element, GraphQLInputField.class);
 
-                return false;
-        }
+        return false;
+    }
 
 }

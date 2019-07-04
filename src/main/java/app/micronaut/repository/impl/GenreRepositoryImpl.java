@@ -11,34 +11,33 @@ import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
-import io.micronaut.spring.tx.annotation.Transactional;
 import app.micronaut.config.ApplicationConfiguration;
 import app.micronaut.domain.Genre;
 import app.micronaut.dto.SortingAndOrderArguments;
 import app.micronaut.repository.GenreRepository;
+import io.micronaut.configuration.hibernate.jpa.scope.CurrentSession;
+import io.micronaut.spring.tx.annotation.Transactional;
 
-@Singleton 
+@Singleton
 public class GenreRepositoryImpl implements GenreRepository {
 
     @PersistenceContext
-    private EntityManager entityManager;  
+    private EntityManager entityManager;
     private final ApplicationConfiguration applicationConfiguration;
 
-    public GenreRepositoryImpl(@CurrentSession EntityManager entityManager,
-                               ApplicationConfiguration applicationConfiguration) { 
+    public GenreRepositoryImpl(@CurrentSession EntityManager entityManager, ApplicationConfiguration applicationConfiguration) {
         this.entityManager = entityManager;
         this.applicationConfiguration = applicationConfiguration;
     }
 
     @Override
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Optional<Genre> findById(@NotNull Long id) {
         return Optional.ofNullable(entityManager.find(Genre.class, id));
     }
 
     @Override
-    @Transactional 
+    @Transactional
     public Genre save(@NotBlank String name) {
         Genre genre = new Genre(name);
         entityManager.persist(genre);
@@ -57,7 +56,7 @@ public class GenreRepositoryImpl implements GenreRepository {
     public List<Genre> findAll(@NotNull SortingAndOrderArguments args) {
         String qlString = "SELECT g FROM Genre as g";
         if (args.getOrder().isPresent() && args.getSort().isPresent() && VALID_PROPERTY_NAMES.contains(args.getSort().get())) {
-                qlString += " ORDER BY g." + args.getSort().get() + " " + args.getOrder().get().toLowerCase();
+            qlString += " ORDER BY g." + args.getSort().get() + " " + args.getOrder().get().toLowerCase();
         }
         TypedQuery<Genre> query = entityManager.createQuery(qlString, Genre.class);
         query.setMaxResults(args.getMax().orElseGet(applicationConfiguration::getMax));
@@ -69,9 +68,6 @@ public class GenreRepositoryImpl implements GenreRepository {
     @Override
     @Transactional
     public int update(@NotNull Long id, @NotBlank String name) {
-        return entityManager.createQuery("UPDATE Genre g SET name = :name where id = :id")
-                .setParameter("name", name)
-                .setParameter("id", id)
-                .executeUpdate();
+        return entityManager.createQuery("UPDATE Genre g SET name = :name where id = :id").setParameter("name", name).setParameter("id", id).executeUpdate();
     }
 }

@@ -1,7 +1,5 @@
 package app.micronaut.repository;
 
-
-
 import java.util.List;
 import java.util.Optional;
 

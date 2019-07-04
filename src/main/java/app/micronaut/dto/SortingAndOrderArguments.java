@@ -17,10 +17,10 @@ public class SortingAndOrderArguments {
     private Integer max;
 
     @Nullable
-    @Pattern(regexp = "id|name")  // <1>
+    @Pattern(regexp = "id|name") // <1>
     private String sort;
 
-    @Pattern(regexp = "asc|ASC|desc|DESC")  // <1>
+    @Pattern(regexp = "asc|ASC|desc|DESC") // <1>
     @Nullable
     private String order;
 
@@ -29,7 +29,7 @@ public class SortingAndOrderArguments {
     }
 
     public Optional<Integer> getOffset() {
-        if(offset == null) {
+        if (offset == null) {
             return Optional.empty();
         }
         return Optional.of(offset);
@@ -40,7 +40,7 @@ public class SortingAndOrderArguments {
     }
 
     public Optional<Integer> getMax() {
-        if(max == null) {
+        if (max == null) {
             return Optional.empty();
         }
         return Optional.of(max);
@@ -51,7 +51,7 @@ public class SortingAndOrderArguments {
     }
 
     public Optional<String> getSort() {
-        if(sort == null) {
+        if (sort == null) {
             return Optional.empty();
         }
         return Optional.of(sort);
@@ -62,7 +62,7 @@ public class SortingAndOrderArguments {
     }
 
     public Optional<String> getOrder() {
-        if(order == null) {
+        if (order == null) {
             return Optional.empty();
         }
         return Optional.of(order);

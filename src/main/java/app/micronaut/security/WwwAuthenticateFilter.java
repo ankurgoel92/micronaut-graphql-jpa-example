@@ -18,13 +18,13 @@ import io.reactivex.Flowable;
 @Filter("/**")
 public class WwwAuthenticateFilter extends OncePerRequestHttpServerFilter {
 
-        @Override
-        protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
-                return Flowable.fromPublisher(chain.proceed(request)).map(response -> {
-                        if (response.getStatus().equals(HttpStatus.UNAUTHORIZED))
-                                response.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"The Realm\"");
-                        return response;
-                });
-        }
-        
+    @Override
+    protected Publisher<MutableHttpResponse<?>> doFilterOnce(HttpRequest<?> request, ServerFilterChain chain) {
+        return Flowable.fromPublisher(chain.proceed(request)).map(response -> {
+            if (response.getStatus().equals(HttpStatus.UNAUTHORIZED))
+                response.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"The Realm\"");
+            return response;
+        });
+    }
+
 }

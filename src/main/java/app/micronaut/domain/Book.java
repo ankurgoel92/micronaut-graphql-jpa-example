@@ -15,7 +15,8 @@ import io.leangen.graphql.annotations.GraphQLQuery;
 @Table(name = "book")
 public class Book {
 
-    public Book() {}
+    public Book() {
+    }
 
     public Book(@NotNull String isbn, @NotNull String name, Genre genre) {
         this.author = isbn;
@@ -23,15 +24,18 @@ public class Book {
         this.genre = genre;
     }
 
-    @Id @GraphQLQuery
+    @Id
+    @GraphQLQuery
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull @GraphQLQuery
+    @NotNull
+    @GraphQLQuery
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull @GraphQLQuery
+    @NotNull
+    @GraphQLQuery
     @Column(name = "author", nullable = false)
     private String author;
 
@@ -53,7 +57,7 @@ public class Book {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public String getAuthor() {
         return author;
     }
